@@ -1,4 +1,5 @@
 using CodeFirst.Data;
+using CodeFirst.Repositories;
 using CodeFirst.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +15,9 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationContext>( options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
 );
-builder.Services.AddScoped<IDbService, DbService>();
+builder.Services.AddScoped<ApplicationContext, ApplicationContext>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 
 
 var app = builder.Build();

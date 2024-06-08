@@ -1,5 +1,11 @@
+using CodeFirst.Data;
+using CodeFirst.DTOs;
+using CodeFirst.Models;
+using CodeFirst.Repositories;
 using CodeFirst.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CodeFirst.Controllers;
 
@@ -7,17 +13,22 @@ namespace CodeFirst.Controllers;
 [Route("api/[controller]")]
 public class PatientsController : ControllerBase
 {
-    private readonly IDbService _dbService;
+    private readonly IPatientService _patientService;
+    private readonly IPatientRepository _patientRepository;
     
-    public PatientsController(IDbService dbService)
+    public PatientsController(IPatientService patientService, IPatientRepository patientRepository)
     {
-        _dbService = dbService;
+        _patientService = patientService;
+        _patientRepository = patientRepository;
     }
     
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetPatients(int id)
+    public async Task<IActionResult> GetPatient(int id)
     {
-        return Ok(_dbService.GetPatient(id));
+        if (!await _patientService.DoesPatientExistAsync(id))
+            return NotFound($"Patient with id {id} not found.");
+        var result = _patientRepository.GetPatientAsync(1);
+        return Ok(result);
     }
     
 }

@@ -29,8 +29,6 @@ public class ApplicationContext : DbContext
         modelBuilder.ApplyConfiguration(new MedicamentConfiguration());
         modelBuilder.ApplyConfiguration(new PrescriptionConfiguration());
         modelBuilder.ApplyConfiguration(new PrescriptionMedicamentConfiguration());
-
         
-
     }
 }

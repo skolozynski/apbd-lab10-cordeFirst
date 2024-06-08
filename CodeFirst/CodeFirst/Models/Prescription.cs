@@ -12,5 +12,5 @@ public class Prescription
     public Patient Patient { get; set; }
     public Doctor Doctor { get; set; }
     
-    public ICollection<PrescriptionMedicament> PrescriptionMedicaments { get; set; } = new HashSet<PrescriptionMedicament>();
+    public virtual ICollection<PrescriptionMedicament> PrescriptionMedicaments { get; set; } = new List<PrescriptionMedicament>();
 }
