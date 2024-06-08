@@ -17,8 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Configurations\" />
-      <Folder Include="Controllers\" />
+      <Folder Include="Migrations\" />
     </ItemGroup>
 
 </Project>

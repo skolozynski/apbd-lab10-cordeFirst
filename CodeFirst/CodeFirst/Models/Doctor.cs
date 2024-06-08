@@ -1,4 +1,6 @@
-﻿namespace CodeFirst.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CodeFirst.Models;
 
 public class Doctor
 {
@@ -7,5 +9,5 @@ public class Doctor
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
 
-
+    public ICollection<Prescription> Prescriptions { get; set; } = new HashSet<Prescription>();
 }
