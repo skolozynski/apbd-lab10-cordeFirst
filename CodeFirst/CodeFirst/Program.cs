@@ -12,12 +12,19 @@ builder.Services.AddSwaggerGen();
 
 //
 builder.Services.AddControllers();
-builder.Services.AddDbContext<ApplicationContext>( options =>
+/*builder.Services.AddDbContext<ApplicationContext>( options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
+);*/
+builder.Services.AddDbContext<ApplicationContext>(options => 
+    options.UseSqlite(builder.Configuration.GetConnectionString("SQLLite"))
 );
+
+
 builder.Services.AddScoped<ApplicationContext, ApplicationContext>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
+builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
 
 
 var app = builder.Build();

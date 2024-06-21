@@ -14,34 +14,53 @@ public class PatientRepository : IPatientRepository
         _context = context;
     }
     
-    public async Task<Object> GetPatientAsync(int id)
+    public async Task<PatientWithPrescriptionDTO> GetPatientAsync(int id)
     {
-        var result =  _context.Patients.Select(p =>
-            new PatientWithPrescriptionDTO()
+        var patient = await _context.Patients.Where(p => p.IdPatient == id)
+            .Include(p => p.Prescriptions)
+            .ThenInclude(p => p.PrescriptionMedicaments)
+            .ThenInclude(p => p.Medicament).Include(patient => patient.Prescriptions)
+            .ThenInclude(prescription => prescription.Doctor).FirstOrDefaultAsync();
+
+        var result = new PatientWithPrescriptionDTO()
+        {
+            IdPatient = patient.IdPatient,
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            BirthDate = patient.BirthDate,
+            Prescriptions = patient.Prescriptions.Select(p => new PrescriptionDto()
             {
-                IdPatient = p.IdPatient,
-                FirstName = p.FirstName,
-                LastName = p.LastName,
-                BirthDate = p.BirthDate,
-                Prescriptions = p.Prescriptions.Select( pp => new PrescriptionDto()
+                IdPrescription = p.IdPrescription,
+                Date = p.Date,
+                DueDate = p.DueDate,
+                Medicaments = p.PrescriptionMedicaments.Select(pm => new MedicamentDto()
                 {
-                    IdPrescription = pp.IdPrescription,
-                    Date = pp.Date,
-                    Medicaments = pp.PrescriptionMedicaments.Select( pm => new MedicamentDto()
-                    {
-                        IdMedicament = pm.Medicament.IdMedicament,
-                        Name = pm.Medicament.Name,
-                        Dose = pm.Dose,
-                        Description = pm.Medicament.Description
-                    }).ToList(),
-                    Doctor = new DoctorDto()
-                    {
-                        IdDoctor = pp.Doctor.IdDoctor,
-                        FirstName = pp.Doctor.FirstName
-                    }
-                }).ToList()
-            }).Where(p => p.IdPatient == id);
+                    IdMedicament = pm.Medicament.IdMedicament,
+                    Name = pm.Medicament.Name,
+                    Dose = pm.Dose,
+                    Description = pm.Medicament.Description
+                }).ToList(),
+                Doctor = new DoctorDto()
+                {
+                    IdDoctor = p.Doctor.IdDoctor,
+                    FirstName = p.Doctor.FirstName
+                }
+            }).ToList()
+        };
             
         return result;
+    }
+
+    public async Task<int> AddPatient(PatientDto patientDto)
+    {
+        var patient = new Patient()
+        {
+            FirstName = patientDto.FirstName,
+            LastName = patientDto.LastName,
+            BirthDate = patientDto.BirthDate
+        };
+        await _context.Patients.AddAsync(patient);
+        await _context.SaveChangesAsync();
+        return patient.IdPatient;
     }
 }

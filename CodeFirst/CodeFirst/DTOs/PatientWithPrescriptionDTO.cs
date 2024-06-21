@@ -20,6 +20,7 @@ public class PrescriptionDto
     public DateOnly DueDate { get; set; }
     public List<MedicamentDto> Medicaments { get; set; }
     public DoctorDto Doctor { get; set; }
+    
 }
 
 public class MedicamentDto

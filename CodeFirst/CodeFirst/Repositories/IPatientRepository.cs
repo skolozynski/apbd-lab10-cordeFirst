@@ -5,5 +5,6 @@ namespace CodeFirst.Repositories;
 
 public interface IPatientRepository
 {
-    Task<Object?> GetPatientAsync(int id);
+    Task<PatientWithPrescriptionDTO> GetPatientAsync(int id);
+    Task<int> AddPatient(PatientDto patientDto);
 }

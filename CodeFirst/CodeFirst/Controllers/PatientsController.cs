@@ -27,7 +27,7 @@ public class PatientsController : ControllerBase
     {
         if (!await _patientService.DoesPatientExistAsync(id))
             return NotFound($"Patient with id {id} not found.");
-        var result = _patientRepository.GetPatientAsync(1);
+        var result = await _patientRepository.GetPatientAsync(id);
         return Ok(result);
     }
     
